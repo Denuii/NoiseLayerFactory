@@ -13,7 +13,8 @@ public class NoiseArt extends PApplet {
   ColorGradient colorGradient;
     
     public void settings() {
-        size(800, 400);
+        //size(1920, 1080);
+        fullScreen();
         noiseSeed(42);
     }
     
@@ -28,10 +29,6 @@ public class NoiseArt extends PApplet {
         float[] positions = {0.0f, controller.color1Pos, controller.color2Pos, controller.color3Pos, 1.0f};
         colorGradient = new ColorGradient(gradientColors, positions);
         noise2D();
-    }
-    
-    public void mouseClicked() {
-        controller.mapView = !controller.mapView;
     }
     
     public void keyPressed() {
@@ -81,8 +78,8 @@ public class NoiseArt extends PApplet {
             for (int x = 0; x < width; x++) {
                 int i = x + y * width;
 
-                //pixels[i] = colorGradient.getInterpolatedColor(manipulate(noiseValues[x][y]));
-                pixels[i] = lerpColor(color(0),color(255),manipulate(noiseValues[x][y]));
+                pixels[i] = colorGradient.getInterpolatedColor(manipulate(noiseValues[x][y]));
+                //pixels[i] = lerpColor(color(0),color(255),manipulate(noiseValues[x][y]));
             }
         }
         
@@ -104,9 +101,12 @@ public class NoiseArt extends PApplet {
         float rough = controller.roughness;
         float pers = controller.persistence;
         
+        float max = 0;
+        
         
         for (int i = 0; i < controller.octaves; i++) {
-            float n = noise((x * xfreq),(y * yfreq),z)*2-1;
+            float n = noise((x * xfreq),(y * yfreq),z);
+            max+=amp;
             n*=amp;
             noiseResult += n;
             
@@ -119,8 +119,25 @@ public class NoiseArt extends PApplet {
         
         if (noiseResult < minHeight)
             minHeight = noiseResult;
-        if (noiseResult > maxHeight)
+            
+        if(controller.fullRange){
+          if (noiseResult < minHeight)
+              minHeight = noiseResult;
+        } else {
+          minHeight = 0;
+        }
+
+            
+        if(controller.fullRange){
+          if (noiseResult > maxHeight)
             maxHeight = noiseResult;
+        } else {
+          maxHeight = max;
+        }
+     
+        
+        
+        
         
         return noiseResult;
         
@@ -137,35 +154,21 @@ public class NoiseArt extends PApplet {
     
     
     private float toMapView(float x) {
-        if (x > 1)
-            x = 1;
-        if (x < 0)
-            x = 0;
+
         
         
         if (x % 0.1 < 0.05) // < shadows; > lighs
             x = (float) Math.round(x * 10) / 10;
-        
-        if (x > 1)
-            x = 1;
-        if (x < 0)
-            x = 0;
+
         
         return x;
     }
     
     private float manipulate(float x) {
-        if (x > 1)
-            x = 1;
-        if (x < 0)
-            x = 0;
+
         //return 1/(1+((float)Math.pow((x/(1-x)),-controller.pv)));
         x = 1 / (1 + (float)Math.pow((x / (1 - x)), - controller.pv));
         
-        if (x > 1)
-            x = 1;
-        if (x < 0)
-            x = 0;
         
         return x;
     }

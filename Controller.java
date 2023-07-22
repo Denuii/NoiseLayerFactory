@@ -27,6 +27,8 @@ public class Controller extends PApplet {
   
   float xOff;
   float yOff;
+  
+  boolean fullRange;
 
   public void settings() {
     size(1200, 1000);
@@ -149,12 +151,24 @@ public class Controller extends PApplet {
     text("Warp X: " + warpX, 650, 50);
     text("Warp Y: " + warpY, 650, 150);
     text("PV: " + pv, 650, 250);
-    text("Klick Render to toggle Map-View: " + mapView, 650, 350);
-    
+    text("Press M to toggle Map-View: " + mapView, 650, 350);
+    text("Press F to toggle Full Range: " + fullRange, 650, 400);
     text("Color 1 Position: " + color1Pos, 650, 450);
     text("Color 2 Position: " + color2Pos, 650, 550);
     text("Color 3 Position: " + color3Pos, 650, 650);
     text("x Offset: " + xOff, 50, 850);
     text("Y Offset: " + yOff, 650, 850);
+    
+    
+  }
+  
+  public void keyPressed() {
+    if (key == 'f' || key == 'F') {
+      fullRange = !fullRange;
+    }
+    
+    if (key == 'm' || key == 'M') {
+        mapView = !mapView;
+    }
   }
 }
