@@ -36,8 +36,8 @@ public class NoiseArt extends PApplet {
     
     public void keyPressed() {
         if (keyCode == ENTER || keyCode == RETURN) {
-            saveFrame("C:\\Users\\denni\\Documents\\AACode\\git\\NoiseLayerFactory\\output-####.png");
-            System.out.println("Saved!");
+            saveFrame(dataPath("output-#####.png"));
+            System.out.println("Saved!: " + dataPath("output-#####.png"));
         }
     }
     
